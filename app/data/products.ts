@@ -1,0 +1,58 @@
+import { Product } from "@/app/types/product";
+
+export const PRODUCTS: Product[] = [
+  {
+    id: 1,
+    name: "Kemeja Mega Mendung Royal",
+    category: "Pria",
+    price: 489000,
+    pattern: "Mega Mendung",
+    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80",
+    description: "Katun primisima halus dengan motif Mega Mendung khas Cirebon berwarna indigo pekat.",
+  },
+  {
+    id: 2,
+    name: "Outer Tunik Parang Rusak",
+    category: "Wanita",
+    price: 549000,
+    pattern: "Parang Rusak",
+    image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=600&q=80",
+    description: "Desain asimetris modern yang elegan, cocok untuk acara formal dan kasual.",
+  },
+  {
+    id: 3,
+    name: "Kain Panjang Kawung Sutra",
+    category: "Kain",
+    price: 720000,
+    pattern: "Kawung",
+    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80",
+    description: "Batik tulis asli di atas sutra ATBM dengan motif Kawung geometris bermakna kesucian.",
+  },
+  {
+    id: 4,
+    name: "Blouse Truntum Floral",
+    category: "Wanita",
+    price: 420000,
+    pattern: "Truntum",
+    image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=600&q=80",
+    description: "Motif bintang tabur melambangkan cinta yang bersemi kembali, bahan katun adem.",
+  },
+  {
+    id: 5,
+    name: "Kemeja Slim-Fit Sekar Jagad",
+    category: "Pria",
+    price: 499000,
+    pattern: "Sekar Jagad",
+    image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=600&q=80",
+    description: "Perpaduan aneka motif kepulauan Indonesia dalam potongan slim-fit kekinian.",
+  },
+  {
+    id: 6,
+    name: "Kain Jarik Sidomukti",
+    category: "Kain",
+    price: 850000,
+    pattern: "Sidomukti",
+    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=600&q=80",
+    description: "Batik cap kombinasi tulis dengan pewarnaan soga alam khas Solo-Yogyakarta.",
+  },
+];
