@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { usersDb } from "@/app/lib/auth";
+import { prisma } from "@/app/lib/prisma";
 
 export async function POST(req: Request) {
   try {
@@ -10,23 +10,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Semua kolom wajib diisi" }, { status: 400 });
     }
 
-    const existingUser = usersDb.find((u) => u.email === email);
+    const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return NextResponse.json({ message: "Email sudah terdaftar" }, { status: 400 });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const newUser = {
-      id: Date.now().toString(),
-      name,
-      email,
-      passwordHash,
-    };
-
-    usersDb.push(newUser);
+    await prisma.user.create({
+      data: { name, email, passwordHash },
+    });
 
     return NextResponse.json({ status: "success", message: "Registrasi berhasil, silakan login" });
-  } catch {
+  } catch (err) {
+    console.error(err);
     return NextResponse.json({ message: "Terjadi kesalahan server" }, { status: 500 });
   }
 }
