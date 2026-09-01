@@ -1,6 +1,8 @@
 "use client";
 
-import { ShoppingCart, Lock } from "lucide-react";
+import { Heart, ShoppingBag, Lock } from "lucide-react";
+import { useState } from "react";
+
 import { Product } from "@/app/types/product";
 
 interface ProductCardProps {
@@ -14,6 +16,8 @@ export default function ProductCard({
   onAddToCart,
   isLoggedIn,
 }: ProductCardProps) {
+  const [liked, setLiked] = useState(false);
+
   const formattedPrice = new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
@@ -21,64 +25,70 @@ export default function ProductCard({
   }).format(product.price);
 
   return (
-    <div className="group bg-[#0f172a]/70 border border-slate-800/80 rounded-2xl overflow-hidden flex flex-col hover:border-orange-500/50 hover:shadow-xl hover:shadow-orange-950/20 transition-all duration-300">
-      {/* Image Container */}
-      <div className="relative aspect-4/3 overflow-hidden bg-slate-950">
+    <article className="group">
+      {/* IMAGE */}
+      <div className="relative aspect-[3/4] overflow-hidden bg-[#ebe7df]">
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+          className="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.04]"
         />
-        <span className="absolute top-3 left-3 bg-[#070b14]/85 backdrop-blur-md border border-slate-700/80 text-orange-400 text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-md">
+
+        {/* Pattern */}
+        <span className="absolute left-4 top-4 bg-white/90 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#171717] backdrop-blur-sm">
           {product.pattern}
         </span>
+
+        {/* Wishlist */}
+        <button
+          onClick={() => setLiked((prev) => !prev)}
+          aria-label="Wishlist"
+          className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm transition hover:bg-white"
+        >
+          <Heart
+            size={16}
+            strokeWidth={1.4}
+            className={
+              liked ? "fill-[#8b4a2f] text-[#8b4a2f]" : "text-[#171717]"
+            }
+          />
+        </button>
+
+        {/* Add to cart overlay */}
+        <button
+          onClick={() => onAddToCart(product)}
+          className="absolute bottom-0 left-0 right-0 flex translate-y-full items-center justify-center gap-2 bg-[#171717] py-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-white transition-transform duration-300 group-hover:translate-y-0"
+        >
+          {isLoggedIn ? (
+            <>
+              <ShoppingBag size={14} strokeWidth={1.5} />
+              Tambah ke Keranjang
+            </>
+          ) : (
+            <>
+              <Lock size={13} strokeWidth={1.5} />
+              Login untuk Membeli
+            </>
+          )}
+        </button>
       </div>
 
-      {/* Content */}
-      <div className="p-5 flex flex-col flex-1 justify-between">
-        <div>
-          <div className="text-[11px] font-semibold text-orange-400/90 uppercase tracking-widest mb-1">
-            {product.category}
-          </div>
-          <h3 className="font-serif font-semibold text-base md:text-lg text-slate-100 group-hover:text-orange-400 transition-colors line-clamp-1">
+      {/* INFORMATION */}
+      <div className="pt-4">
+        <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#8b4a2f]">
+          {product.category}
+        </p>
+
+        <div className="mt-1 flex items-start justify-between gap-4">
+          <h3 className="text-sm font-medium leading-5 text-[#171717]">
             {product.name}
           </h3>
-          <p className="mt-2 text-xs text-slate-400 leading-relaxed line-clamp-2">
-            {product.description}
-          </p>
-        </div>
 
-        {/* Footer Card */}
-        <div className="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
-          <div>
-            <span className="text-[10px] uppercase text-slate-400 font-medium block">Harga</span>
-            <span className="text-base font-bold text-orange-400 font-sans tracking-tight">
-              {formattedPrice}
-            </span>
-          </div>
-
-          <button
-            onClick={() => onAddToCart(product)}
-            className={`px-3.5 py-2 text-xs font-semibold rounded-xl transition flex items-center gap-1.5 ${
-              isLoggedIn
-                ? "bg-orange-500 hover:bg-orange-600 text-white shadow-md shadow-orange-950/40 active:scale-95 cursor-pointer"
-                : "bg-slate-900 border border-slate-700/80 text-slate-400 hover:border-orange-500/60 hover:text-orange-300 cursor-pointer"
-            }`}
-          >
-            {isLoggedIn ? (
-              <>
-                <ShoppingCart className="w-3.5 h-3.5" />
-                <span>+ Keranjang</span>
-              </>
-            ) : (
-              <>
-                <Lock className="w-3.5 h-3.5 text-orange-400" />
-                <span>Wajib Login</span>
-              </>
-            )}
-          </button>
+          <span className="whitespace-nowrap text-xs font-medium text-[#171717]">
+            {formattedPrice}
+          </span>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

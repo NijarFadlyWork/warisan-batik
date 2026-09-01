@@ -1,6 +1,14 @@
 "use client";
 
-import { ShoppingBag, User, LogOut, Sparkles } from "lucide-react";
+import {
+  ShoppingBag,
+  User,
+  LogOut,
+  Search,
+  Menu,
+  X,
+} from "lucide-react";
+import { useState } from "react";
 
 interface NavbarProps {
   cartCount: number;
@@ -17,81 +25,173 @@ export default function Navbar({
   onOpenAuth,
   onLogout,
 }: NavbarProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const closeMobile = () => setMobileOpen(false);
+
   return (
-    <header className="sticky top-0 z-40 bg-[#070b14]/85 backdrop-blur-md border-b border-slate-800/80">
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        {/* Brand Logo */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/20">
-            <Sparkles className="w-5 h-5" />
-          </div>
-          <div>
-            <span className="font-serif text-xl font-bold tracking-widest text-white uppercase block leading-none">
-              Warisan
-            </span>
-            <span className="text-[10px] font-semibold text-orange-400 tracking-[0.25em] uppercase">
-              Batik Nusantara
-            </span>
-          </div>
-        </div>
-
-        {/* Navigation Links */}
-        <nav className="hidden md:flex items-center gap-8 text-xs font-medium uppercase tracking-wider text-slate-300">
-          <a href="#hero" className="hover:text-orange-400 transition-colors">
-            Beranda
-          </a>
-          <a href="#katalog" className="hover:text-orange-400 transition-colors">
-            Katalog
-          </a>
-          <a href="#filosofi" className="hover:text-orange-400 transition-colors">
-            Filosofi
-          </a>
-        </nav>
-
-        {/* Right Actions */}
-        <div className="flex items-center gap-4">
-          {/* User Auth Info */}
-          {user ? (
-            <div className="flex items-center gap-3 bg-slate-900/90 border border-slate-800 px-3.5 py-1.5 rounded-full">
-              <div className="w-7 h-7 rounded-full bg-orange-600/20 border border-orange-500/40 flex items-center justify-center text-orange-400">
-                <User className="w-3.5 h-3.5" />
-              </div>
-              <span className="text-xs font-medium text-slate-200 hidden sm:inline">
-                {user.name}
-              </span>
-              <button
-                onClick={onLogout}
-                title="Keluar"
-                className="text-slate-400 hover:text-rose-400 p-1 transition-colors"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={onOpenAuth}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700/60 transition"
-            >
-              <User className="w-4 h-4 text-orange-400" />
-              <span>Masuk</span>
-            </button>
-          )}
-
-          {/* Cart Trigger */}
-          <button
-            onClick={onOpenCart}
-            className="relative p-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white transition shadow-lg shadow-orange-500/20 active:scale-95"
-            aria-label="Keranjang Belanja"
+    <>
+      <header className="sticky top-0 z-50 border-b border-black/10 bg-[#f7f5f0]/95 backdrop-blur-md">
+        <div className="mx-auto flex h-[76px] max-w-[1400px] items-center justify-between px-5 md:px-8 lg:px-10">
+          {/* LOGO */}
+          <a
+            href="#hero"
+            className="group flex flex-col leading-none"
+            onClick={closeMobile}
           >
-            <ShoppingBag className="w-5 h-5" />
-            {cartCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-blue-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#070b14]">
-                {cartCount}
-              </span>
+            <span className="font-serif text-[22px] font-semibold tracking-[0.18em] text-[#171717]">
+              WARISAN
+            </span>
+
+            <span className="mt-1 text-[9px] font-medium tracking-[0.35em] text-[#8b4a2f]">
+              BATIK NUSANTARA
+            </span>
+          </a>
+
+          {/* DESKTOP NAV */}
+          <nav className="hidden items-center gap-9 md:flex">
+            <a
+              href="#hero"
+              className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#171717] transition-colors hover:text-[#8b4a2f]"
+            >
+              Beranda
+            </a>
+
+            <a
+              href="#katalog"
+              className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#171717] transition-colors hover:text-[#8b4a2f]"
+            >
+              Koleksi
+            </a>
+
+            <a
+              href="#filosofi"
+              className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#171717] transition-colors hover:text-[#8b4a2f]"
+            >
+              Filosofi
+            </a>
+          </nav>
+
+          {/* ACTIONS */}
+          <div className="flex items-center gap-2 md:gap-4">
+            <button
+              aria-label="Cari"
+              className="hidden p-2 text-[#171717] transition hover:text-[#8b4a2f] sm:block"
+            >
+              <Search size={19} strokeWidth={1.5} />
+            </button>
+
+            {/* USER */}
+            {user ? (
+              <div className="hidden items-center gap-2 sm:flex">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full border border-black/10">
+                  <User size={14} strokeWidth={1.5} />
+                </div>
+
+                <span className="max-w-[100px] truncate text-[11px] font-medium">
+                  {user.name}
+                </span>
+
+                <button
+                  onClick={onLogout}
+                  title="Keluar"
+                  className="p-1 text-[#777] transition hover:text-red-700"
+                >
+                  <LogOut size={14} strokeWidth={1.5} />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={onOpenAuth}
+                className="hidden text-[11px] font-medium uppercase tracking-[0.12em] text-[#171717] transition hover:text-[#8b4a2f] sm:block"
+              >
+                Masuk
+              </button>
             )}
-          </button>
+
+            {/* CART */}
+            <button
+              onClick={onOpenCart}
+              aria-label="Keranjang Belanja"
+              className="relative p-2 text-[#171717] transition hover:text-[#8b4a2f]"
+            >
+              <ShoppingBag size={20} strokeWidth={1.5} />
+
+              {cartCount > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-[#8b4a2f] px-1 text-[9px] font-semibold text-white">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
+            {/* MOBILE MENU */}
+            <button
+              onClick={() => setMobileOpen((prev) => !prev)}
+              className="p-2 md:hidden"
+              aria-label="Menu"
+            >
+              {mobileOpen ? (
+                <X size={21} strokeWidth={1.5} />
+              ) : (
+                <Menu size={21} strokeWidth={1.5} />
+              )}
+            </button>
+          </div>
         </div>
-      </div>
-    </header>
+
+        {/* MOBILE MENU */}
+        {mobileOpen && (
+          <div className="border-t border-black/10 bg-[#f7f5f0] md:hidden">
+            <nav className="flex flex-col px-6 py-6">
+              <a
+                href="#hero"
+                onClick={closeMobile}
+                className="border-b border-black/10 py-4 text-xs uppercase tracking-[0.18em]"
+              >
+                Beranda
+              </a>
+
+              <a
+                href="#katalog"
+                onClick={closeMobile}
+                className="border-b border-black/10 py-4 text-xs uppercase tracking-[0.18em]"
+              >
+                Koleksi
+              </a>
+
+              <a
+                href="#filosofi"
+                onClick={closeMobile}
+                className="border-b border-black/10 py-4 text-xs uppercase tracking-[0.18em]"
+              >
+                Filosofi
+              </a>
+
+              {!user ? (
+                <button
+                  onClick={() => {
+                    closeMobile();
+                    onOpenAuth();
+                  }}
+                  className="py-4 text-left text-xs uppercase tracking-[0.18em]"
+                >
+                  Masuk
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    closeMobile();
+                    onLogout();
+                  }}
+                  className="py-4 text-left text-xs uppercase tracking-[0.18em] text-red-700"
+                >
+                  Keluar
+                </button>
+              )}
+            </nav>
+          </div>
+        )}
+      </header>
+    </>
   );
 }

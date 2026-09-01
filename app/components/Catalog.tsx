@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { ChevronLeft, ChevronRight, Layers } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
+
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+
 import { Product } from "@/app/types/product";
 import ProductCard from "./ProductCard";
 
@@ -20,8 +22,16 @@ interface CatalogProps {
   isLoggedIn: boolean;
 }
 
-const CATEGORIES = ["Semua", "Pria", "Wanita", "Kain", "Celana", "Sepatu"];
-const ITEMS_PER_PAGE = 6;
+const CATEGORIES = [
+  "Semua",
+  "Pria",
+  "Wanita",
+  "Kain",
+  "Celana",
+  "Sepatu",
+];
+
+const ITEMS_PER_PAGE = 8;
 
 export default function Catalog({
   products,
@@ -31,12 +41,13 @@ export default function Catalog({
   isLoggedIn,
 }: CatalogProps) {
   const containerRef = useRef<HTMLElement>(null);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filteredProducts =
     selectedCategory === "Semua"
       ? products
-      : products.filter((p) => p.category === selectedCategory);
+      : products.filter((product) => product.category === selectedCategory);
 
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
 
@@ -45,6 +56,7 @@ export default function Catalog({
   }, [selectedCategory]);
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+
   const currentProducts = filteredProducts.slice(
     startIndex,
     startIndex + ITEMS_PER_PAGE
@@ -54,67 +66,85 @@ export default function Catalog({
     () => {
       gsap.fromTo(
         ".product-card-item",
-        { y: 20, opacity: 0 },
+        {
+          y: 25,
+          opacity: 0,
+        },
         {
           y: 0,
           opacity: 1,
-          duration: 0.45,
+          duration: 0.55,
           stagger: 0.06,
           ease: "power2.out",
         }
       );
     },
-    { scope: containerRef, dependencies: [currentPage, selectedCategory] }
+    {
+      scope: containerRef,
+      dependencies: [currentPage, selectedCategory],
+    }
   );
 
   const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
+
     setCurrentPage(page);
-    if (containerRef.current) {
-      containerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+
+    containerRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
 
   return (
     <section
       ref={containerRef}
       id="katalog"
-      className="max-w-7xl mx-auto px-6 py-20 border-t border-slate-800/60"
+      className="mx-auto max-w-[1400px] scroll-mt-20 px-5 py-20 md:px-8 md:py-28 lg:px-10"
     >
-      {/* Header & Tabs */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
-        <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-orange-400 uppercase tracking-widest mb-2">
-            <Layers className="w-4 h-4" />
-            <span>Koleksi Wastra Nusantara</span>
+      {/* HEADER */}
+      <div className="border-b border-black/10 pb-8">
+        <div className="flex flex-col justify-between gap-7 md:flex-row md:items-end">
+          <div>
+            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-[#8b4a2f]">
+              The Collection
+            </p>
+
+            <h2 className="font-serif text-4xl font-medium tracking-tight text-[#171717] md:text-5xl">
+              New Arrivals
+            </h2>
+
+            <p className="mt-3 text-sm text-[#77736d]">
+              {filteredProducts.length} produk dalam koleksi Warisan.
+            </p>
           </div>
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-white tracking-tight">
-            Katalog Eksklusif
-          </h2>
-          <p className="text-slate-400 text-sm mt-1">
-            Menampilkan {filteredProducts.length} pilihan busana autentik.
-          </p>
+
+          <button className="flex w-fit items-center gap-2 border-b border-black/30 pb-2 text-[10px] font-medium uppercase tracking-[0.2em] text-[#171717]">
+            <SlidersHorizontal size={14} strokeWidth={1.3} />
+            Filter & Sort
+          </button>
         </div>
 
-        {/* Category Pills */}
-        <div className="flex flex-wrap gap-1.5 p-1.5 bg-[#070b14] border border-slate-800 rounded-2xl w-fit">
-          {CATEGORIES.map((cat) => (
+        {/* CATEGORIES */}
+        <div className="mt-9 flex gap-6 overflow-x-auto pb-1 scrollbar-hide">
+          {CATEGORIES.map((category) => (
             <button
-              key={cat}
-              onClick={() => onSelectCategory(cat)}
-              className={`px-4 py-2 text-xs font-semibold rounded-xl transition ${
-                selectedCategory === cat
-                  ? "bg-orange-500 text-white shadow-md shadow-orange-950"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+              key={category}
+              onClick={() => onSelectCategory(category)}
+              className={`whitespace-nowrap border-b pb-2 text-[10px] font-medium uppercase tracking-[0.18em] transition ${
+                selectedCategory === category
+                  ? "border-[#171717] text-[#171717]"
+                  : "border-transparent text-[#8a867f] hover:text-[#171717]"
               }`}
             >
-              {cat}
+              {category}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* PRODUCTS */}
+      <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 md:gap-x-6 lg:grid-cols-4 lg:gap-x-7 lg:gap-y-16">
         {currentProducts.map((product) => (
           <div key={product.id} className="product-card-item">
             <ProductCard
@@ -126,39 +156,52 @@ export default function Catalog({
         ))}
       </div>
 
-      {/* Pagination Nav */}
+      {/* EMPTY */}
+      {currentProducts.length === 0 && (
+        <div className="py-24 text-center">
+          <p className="font-serif text-2xl text-[#171717]">
+            Tidak ada produk.
+          </p>
+
+          <p className="mt-2 text-sm text-[#77736d]">
+            Coba pilih kategori lainnya.
+          </p>
+        </div>
+      )}
+
+      {/* PAGINATION */}
       {totalPages > 1 && (
-        <div className="mt-14 flex items-center justify-center gap-2">
+        <div className="mt-20 flex items-center justify-center gap-2">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="p-2.5 rounded-xl border border-slate-800 bg-[#0f172a] text-slate-300 hover:border-orange-500 hover:text-orange-400 disabled:opacity-30 disabled:hover:border-slate-800 transition flex items-center justify-center"
-            aria-label="Previous Page"
+            className="flex h-10 w-10 items-center justify-center border border-black/10 text-[#171717] transition hover:border-black disabled:cursor-not-allowed disabled:opacity-30"
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft size={16} strokeWidth={1.3} />
           </button>
 
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-            <button
-              key={pageNum}
-              onClick={() => handlePageChange(pageNum)}
-              className={`w-10 h-10 text-xs font-bold rounded-xl border transition ${
-                currentPage === pageNum
-                  ? "bg-orange-500 border-orange-400 text-white shadow-lg shadow-orange-950/50"
-                  : "bg-[#0f172a] border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white"
-              }`}
-            >
-              {pageNum}
-            </button>
-          ))}
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+            (page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={`flex h-10 w-10 items-center justify-center border text-[11px] transition ${
+                  currentPage === page
+                    ? "border-[#171717] bg-[#171717] text-white"
+                    : "border-black/10 text-[#77736d] hover:border-black"
+                }`}
+              >
+                {page}
+              </button>
+            )
+          )}
 
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="p-2.5 rounded-xl border border-slate-800 bg-[#0f172a] text-slate-300 hover:border-orange-500 hover:text-orange-400 disabled:opacity-30 disabled:hover:border-slate-800 transition flex items-center justify-center"
-            aria-label="Next Page"
+            className="flex h-10 w-10 items-center justify-center border border-black/10 text-[#171717] transition hover:border-black disabled:cursor-not-allowed disabled:opacity-30"
           >
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight size={16} strokeWidth={1.3} />
           </button>
         </div>
       )}

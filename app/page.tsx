@@ -70,7 +70,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-100 selection:bg-amber-700 selection:text-white font-sans">
+   <div className="min-h-screen bg-[#f7f5f0] text-[#171717] selection:bg-[#8b4a2f] selection:text-white font-sans">
       <Navbar
         cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)}
         onOpenCart={() => {
