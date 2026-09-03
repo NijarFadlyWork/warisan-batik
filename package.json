@@ -2,17 +2,18 @@
   "name": "my-next-app",
   "version": "0.1.0",
   "private": true,
-"scripts": {
-  "dev": "next dev",
-  "build": "next build",
-  "start": "next start",
-  "lint": "eslint",
-  "postinstall": "prisma generate"
-},
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "postinstall": "prisma generate"
+  },
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "bcryptjs": "^3.0.3",
     "gsap": "^3.15.0",
+    "jose": "^6.2.10",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^1.38.0",
     "midtrans-client": "^1.4.3",
@@ -33,6 +34,10 @@
     "eslint-config-next": "16.3.3",
     "prisma": "^5.22.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.13",
     "typescript": "^5"
-  }
+  },
+  "prisma": {
+  "seed": "tsx prisma/seed.ts"
+}
 }

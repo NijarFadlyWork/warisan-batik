@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Cinzel, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import { AppProvider } from "./context/AppContext";
+import AppShell from "./components/AppShell";
 
 const cinzel = Cinzel({
   subsets: ["latin"],
@@ -27,7 +29,9 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${cinzel.variable} ${jakarta.variable}`}>
       <body className="bg-[#0b1120] text-slate-100 font-sans antialiased selection:bg-orange-500 selection:text-white">
-        {children}
+        <AppProvider>
+          <AppShell>{children}</AppShell>
+        </AppProvider>
       </body>
     </html>
   );

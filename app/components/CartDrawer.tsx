@@ -7,8 +7,8 @@ interface CartDrawerProps {
   onClose: () => void;
   cart: CartItem[];
   user: { name: string; email: string } | null;
-  onUpdateQuantity: (productId: number, delta: number) => void;
-  onRemoveItem: (productId: number) => void;
+  onUpdateQuantity: (productId: string, delta: number) => void;
+  onRemoveItem: (productId: string) => void;
   onOpenPaymentModal: () => void;
 }
 

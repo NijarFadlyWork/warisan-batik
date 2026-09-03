@@ -1,0 +1,38 @@
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+const products = [
+  { name: "Kemeja Mega Mendung Royal", category: "Pria", price: 489000, pattern: "Mega Mendung", image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80", description: "Kemeja sutra katun premium dengan corak awan Mega Mendung khas Cirebon berpalet navy royal." },
+  { name: "Hem Parang Kusumo Klasik", category: "Pria", price: 375000, pattern: "Parang", image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80", description: "Kemeja lengan pendek motif Parang Kusumo dengan sentuhan warna sogan autentik keraton Solo." },
+  { name: "Kemeja Kawung Manik Prabu", category: "Pria", price: 420000, pattern: "Kawung", image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=800&q=80", description: "Desain geometris simetris kawung melambangkan kesucian dan ketulusan hati dalam balutan katun halus." },
+  { name: "Outer Sekar Jagad Modern", category: "Wanita", price: 520000, pattern: "Sekar Jagad", image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80", description: "Outerwear siluet longgar dengan mozaik motif bunga nusantara yang anggun dan dinamis." },
+  { name: "Blouse Truntum Kemuning", category: "Wanita", price: 389000, pattern: "Truntum", image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=800&q=80", description: "Blouse elegan bertabur motif bintang malam Truntum simbol cinta tanpa syarat." },
+  { name: "Dress Batik Lereng Asmaradana", category: "Wanita", price: 645000, pattern: "Lereng", image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=800&q=80", description: "Gaun midi potongan A-line dengan motif lereng diagonal yang memberi siluet ramping nan memikat." },
+  { name: "Kain Panjang Tulis Sidomukti", category: "Kain", price: 1250000, pattern: "Sidomukti", image: "https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=800&q=80", description: "Kain batik tulis canting tangan asli dengan ornamen garuda dan tatah prada emas murni." },
+  { name: "Kain Pola Tambal Sewu", category: "Kain", price: 890000, pattern: "Tambal", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80", description: "Kombinasi ribuan potongan motif kuno penuh filosofi keseimbangan dan pemulihan jiwa." },
+  { name: "Kain Primissima Lasem Tiga Negeri", category: "Kain", price: 1450000, pattern: "Lasem", image: "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&w=800&q=80", description: "Karya akulturasi legendaris dengan tiga kali tahap pewarnaan alami di tiga wilayah pesisir." },
+  { name: "Celana Kulot Parang Barong", category: "Celana", price: 345000, pattern: "Parang", image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80", description: "Celana kulot santai dengan pinggang elastis dan motif parang besar bernuansa monokrom modern." },
+  { name: "Ankle Chino Batik Pring Sedapur", category: "Celana", price: 395000, pattern: "Pring Sedapur", image: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=800&q=80", description: "Celana chino slim-fit dengan aksen batik motif bambu Magetan pada saku belakang dan lipatan bawah." },
+  { name: "Celana Harem Sogan Nusantara", category: "Celana", price: 320000, pattern: "Sogan", image: "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=800&q=80", description: "Celana harem berpotongan longgar yang nyaman dipakai harian dengan motif klasik tanah Jawa." },
+  { name: "Sneakers Low Mega Mendung Indigo", category: "Sepatu", price: 575000, pattern: "Mega Mendung", image: "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=800&q=80", description: "Sneakers kanvas dengan balutan kain batik cap Mega Mendung dan sol karet vulkanisir tahan lama." },
+  { name: "Slip-On Kawung Minimalis", category: "Sepatu", price: 495000, pattern: "Kawung", image: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?auto=format&fit=crop&w=800&q=80", description: "Sepatu slip-on kasual berlapis busa empuk dengan motif kawung geometris warna bumi." },
+  { name: "Loafers Kulit Aksen Batik Parang", category: "Sepatu", price: 780000, pattern: "Parang", image: "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&w=800&q=80", description: "Kombinasi kulit sapi asli premium dan panel batik sutra parang untuk tampilan formal mewah." },
+  { name: "Mules Tenun & Batik Geometris", category: "Sepatu", price: 440000, pattern: "Geometris", image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=800&q=80", description: "Sepatu mules wanita bertumit rendah dengan kombinasi ornamen batik kontemporer yang chic." },
+];
+
+async function main() {
+  for (const product of products) {
+    await prisma.product.create({ data: product });
+  }
+  console.log(`Selesai seed ${products.length} produk.`);
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

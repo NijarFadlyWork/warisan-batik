@@ -1,5 +1,5 @@
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   category: "Pria" | "Wanita" | "Kain" | "Celana" | "Sepatu";
   price: number;
