@@ -23,14 +23,28 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Akses ditolak" }, { status: 403 });
   }
 
-  const { name, category, price, pattern, image, description } = await req.json();
+  const { inventoryId, price, description } = await req.json();
 
-  if (!name || !category || !price || !pattern || !image || !description) {
+  if (!inventoryId || !price || !description) {
     return NextResponse.json({ message: "Semua kolom wajib diisi" }, { status: 400 });
   }
 
+  const inventoryItem = await prisma.inventory.findUnique({ where: { id: inventoryId } });
+
+  if (!inventoryItem) {
+    return NextResponse.json({ message: "Data gudang tidak ditemukan" }, { status: 404 });
+  }
+
   const product = await prisma.product.create({
-    data: { name, category, price: Number(price), pattern, image, description },
+    data: {
+      name: inventoryItem.name,
+      category: inventoryItem.category,
+      pattern: inventoryItem.pattern,
+      image: inventoryItem.image,
+      price: Number(price),
+      description,
+      inventoryId: inventoryItem.id,
+    },
   });
 
   return NextResponse.json({ status: "success", product });

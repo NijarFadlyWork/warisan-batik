@@ -99,12 +99,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const closePayment = () => setIsPaymentOpen(false);
 
   const handleLoginSuccess = (loggedUser: User) => {
-    setUser(loggedUser);
-    setAuthNotice("");
-    if (loggedUser.role === "ADMIN") {
-      router.push("/admin");
-    }
-  };
+  setUser(loggedUser);
+  setAuthNotice("");
+
+  if (loggedUser.role === "ADMIN") {
+    router.push("/admin/products");
+  } else if (loggedUser.role === "GUDANG") {
+    router.push("/admin/gudang");
+  }
+};
 
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });

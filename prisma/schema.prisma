@@ -10,6 +10,7 @@ datasource db {
 enum Role {
   USER
   ADMIN
+  GUDANG
 }
 
 model User {
@@ -22,13 +23,33 @@ model User {
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  name        String
-  category    String
-  price       Int
-  pattern     String
-  image       String
-  description String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String     @id @default(cuid())
+  name          String
+  category      String
+  price         Int
+  pattern       String
+  image         String
+  description   String
+  stock_product Int        @default(0)
+  inventoryId   String?
+  inventory     Inventory? @relation(fields: [inventoryId], references: [id])
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Inventory {
+  id           String    @id @default(cuid())
+  name         String
+  category     String
+  price        Int
+  pattern      String
+  image        String
+  description  String
+  warna        String    @default("Belum diatur")
+  desain       String    @default("Depan")
+  model        String    @default("Lengan Pendek")
+  stock_gudang Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  products     Product[]
 }
