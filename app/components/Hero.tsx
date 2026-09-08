@@ -11,7 +11,7 @@ export default function Hero() {
       {/* IMAGE */}
       <div className="absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1800&q=90"
+          src="img/gorga.jpeg"
           alt="Koleksi Warisan Batik"
           className="h-full w-full object-cover object-center"
         />
@@ -29,15 +29,14 @@ export default function Hero() {
               Koleksi Terbaru · 2026
             </p>
 
-            <h1 className="font-serif text-5xl font-medium leading-[0.95] tracking-tight md:text-7xl lg:text-8xl">
-              Heritage
+            <h1 className="font-serif text-4xl font-medium leading-[0.95] tracking-tight md:text-5xl lg:text-6xl">
+              Warisan,
               <br />
-              <span className="italic">Reimagined.</span>
+              <span className="italic">ditafsirkan kembali.</span>
             </h1>
 
             <p className="mt-6 max-w-md text-sm leading-7 text-white/85 md:text-base">
-              Warisan batik Nusantara yang diterjemahkan ke dalam siluet
-              modern untuk kehidupan hari ini.
+              Tradisi Nusantara dalam siluet
             </p>
 
             <a

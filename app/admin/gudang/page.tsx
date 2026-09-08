@@ -35,6 +35,7 @@ export default function AdminGudangPage() {
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [form, setForm] = useState(EMPTY_FORM);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   const fetchItems = async () => {
     setLoading(true);
@@ -47,21 +48,62 @@ export default function AdminGudangPage() {
     fetchItems();
   }, []);
 
+  const handleEditClick = (item: InventoryItem) => {
+    setEditingId(item.id);
+    setForm({
+      name: item.name,
+      category: item.category,
+      price: String(item.price),
+      pattern: item.pattern,
+      image: item.image,
+      description: item.description,
+      warna: item.warna,
+      desain: item.desain,
+      model: item.model,
+      stock_gudang: String(item.stock_gudang),
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setForm(EMPTY_FORM);
+    setErrorMsg("");
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Yakin mau hapus data gudang ini?")) return;
+
+    const res = await fetch(`/api/admin/inventory/${id}`, { method: "DELETE" });
+    const data = await res.json();
+
+    if (res.ok) {
+      fetchItems();
+      if (editingId === id) handleCancelEdit();
+    } else {
+      alert(data.message || "Gagal menghapus data gudang");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
     setErrorMsg("");
 
+    const endpoint = editingId ? `/api/admin/inventory/${editingId}` : "/api/admin/inventory";
+    const method = editingId ? "PUT" : "POST";
+
     try {
-      const res = await fetch("/api/admin/inventory", {
-        method: "POST",
+      const res = await fetch(endpoint, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Gagal menambahkan data gudang");
+      if (!res.ok) throw new Error(data.message || "Gagal menyimpan data gudang");
 
       setForm(EMPTY_FORM);
+      setEditingId(null);
       fetchItems();
     } catch (err) {
       if (err instanceof Error) setErrorMsg(err.message);
@@ -76,6 +118,10 @@ export default function AdminGudangPage() {
       <p className="mt-2 text-sm text-[#77736d]">Kelola data stok produk di gudang.</p>
 
       <form onSubmit={handleSubmit} className="mt-8 grid max-w-xl gap-4 border border-black/10 bg-white p-6">
+        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#8b4a2f]">
+          {editingId ? "Edit Data Gudang" : "Tambah Data Gudang Baru"}
+        </p>
+
         {errorMsg && <p className="text-xs text-red-600">{errorMsg}</p>}
 
         <input required placeholder="Nama produk" value={form.name}
@@ -137,10 +183,19 @@ export default function AdminGudangPage() {
           onChange={(e) => setForm({ ...form, stock_gudang: e.target.value })}
           className="border border-black/10 px-3 py-2 text-sm" />
 
-        <button type="submit" disabled={submitting}
-          className="bg-[#171717] px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white disabled:opacity-50">
-          {submitting ? "Menyimpan..." : "Tambah ke Gudang"}
-        </button>
+        <div className="flex gap-2">
+          <button type="submit" disabled={submitting}
+            className="flex-1 bg-[#171717] px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white disabled:opacity-50">
+            {submitting ? "Menyimpan..." : editingId ? "Simpan Perubahan" : "Tambah ke Gudang"}
+          </button>
+
+          {editingId && (
+            <button type="button" onClick={handleCancelEdit}
+              className="px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#171717] border border-black/10">
+              Batal
+            </button>
+          )}
+        </div>
       </form>
 
       <div className="mt-10">
@@ -158,11 +213,20 @@ export default function AdminGudangPage() {
                     <p className="text-xs text-[#77736d]">
                       {item.category} · {item.warna} · {item.desain} · {item.model} · Rp {item.price.toLocaleString("id-ID")}
                     </p>
+                    <p className="text-xs font-semibold text-[#8b4a2f]">Stok: {item.stock_gudang}</p>
                   </div>
                 </div>
-                <span className="text-xs font-semibold text-[#8b4a2f]">
-                  Stok: {item.stock_gudang}
-                </span>
+
+                <div className="flex gap-2">
+                  <button onClick={() => handleEditClick(item)}
+                    className="border border-black/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#171717] hover:border-black">
+                    Edit
+                  </button>
+                  <button onClick={() => handleDelete(item.id)}
+                    className="border border-red-200 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-red-600 hover:border-red-600">
+                    Hapus
+                  </button>
+                </div>
               </div>
             ))}
           </div>

@@ -40,11 +40,11 @@ export default function Navbar({
             onClick={closeMobile}
           >
             <span className="font-serif text-[22px] font-semibold tracking-[0.18em] text-[#171717]">
-              WARISAN
+              GORGA
             </span>
 
             <span className="mt-1 text-[9px] font-medium tracking-[0.35em] text-[#8b4a2f]">
-              BATIK NUSANTARA
+              PULANG LEWAT CERITA
             </span>
           </a>
 

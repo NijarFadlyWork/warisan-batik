@@ -6,16 +6,15 @@ export default function Footer() {
           {/* BRAND */}
           <div className="lg:col-span-2">
             <h3 className="font-serif text-3xl tracking-[0.12em]">
-              WARISAN
+              GORGA
             </h3>
 
             <p className="mt-2 text-[9px] uppercase tracking-[0.35em] text-white/45">
-              Batik Nusantara
+              PULANG BAWA CERITA
             </p>
 
             <p className="mt-7 max-w-sm text-sm leading-7 text-white/60">
-              Menghidupkan kembali cerita batik Nusantara melalui desain yang
-              relevan untuk generasi modern.
+              Membawa cerita warisan Nusantara ke dalam bentuk yang baru.
             </p>
           </div>
 
@@ -84,7 +83,41 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 border-t border-white/10 pt-6">
+        {/* LEGAL & PRODUCTION */}
+        <div className="mt-16">
+          {/* GARIS ATAS */}
+          <div className="border-t border-white/10" />
+
+          <div className="grid grid-cols-1 gap-8 py-8 md:grid-cols-2">
+            {/* PENASIHAT HUKUM */}
+            <div>
+              <p className="text-[9px] font-semibold uppercase tracking-[0.3em] text-white/40">
+                Penasihat Hukum
+              </p>
+
+              <p className="mt-4 text-sm text-white/70">
+                Lamsihar MP Rumahorbo, S.H & Partner
+              </p>
+            </div>
+
+            {/* DESAIN & PRODUKSI */}
+            <div>
+              <p className="text-[9px] font-semibold uppercase tracking-[0.3em] text-white/40">
+                Desain & Produksi
+              </p>
+
+              <p className="mt-4 text-sm text-white/70">
+                Gorga_Indonesia
+              </p>
+            </div>
+          </div>
+
+          {/* GARIS BAWAH */}
+          <div className="border-t border-white/10" />
+        </div>
+
+        {/* COPYRIGHT */}
+        <div className="pt-6">
           <p className="text-[10px] uppercase tracking-[0.15em] text-white/35">
             © {new Date().getFullYear()} WARISAN BATIK. ALL RIGHTS RESERVED.
           </p>
