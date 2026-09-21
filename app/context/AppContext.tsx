@@ -1,8 +1,9 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Product, CartItem } from "@/app/types/product";
+
 
 interface User {
   name: string;
@@ -41,6 +42,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [authNotice, setAuthNotice] = useState("");
+
+    // Rehydrate session dari cookie pas app pertama kali di-load / di-refresh
+  useEffect(() => {
+    const restoreSession = async () => {
+      try {
+        const res = await fetch("/api/auth/me");
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.user) setUser(data.user);
+      } catch {
+        // gagal cek session, biarin user tetap null (anggap belum login)
+      }
+    };
+    restoreSession();
+  }, []);
 
   const addToCart = (product: Product) => {
     if (!user) {
@@ -113,6 +129,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     await fetch("/api/auth/logout", { method: "POST" });
     setUser(null);
     setCart([]);
+    router.push("/");
   };
 
   const clearCart = () => setCart([]);
