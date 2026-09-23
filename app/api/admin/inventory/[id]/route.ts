@@ -19,11 +19,19 @@ export async function PUT(
   }
 
   const { id } = await params;
-  const { name, category, price, pattern, image, description, warna, desain, model, stock_gudang } = await req.json();
+  const {
+    name, category, price, pattern, image, description,
+    warna, desain, model, kode_wilayah, kode_jenis, kode_design, stock_gudang,
+  } = await req.json();
 
-  if (!name || !category || !price || !pattern || !image || !description || !warna || !desain || !model) {
+  if (
+    !name || !category || !price || !pattern || !image || !description ||
+    !warna || !desain || !model || !kode_wilayah || !kode_jenis || !kode_design
+  ) {
     return NextResponse.json({ message: "Semua kolom wajib diisi" }, { status: 400 });
   }
+
+  const kode_barang = `${kode_wilayah}-${kode_jenis}-${kode_design}`;
 
   const item = await prisma.inventory.update({
     where: { id },
@@ -37,6 +45,10 @@ export async function PUT(
       warna,
       desain,
       model,
+      kode_wilayah,
+      kode_jenis,
+      kode_design,
+      kode_barang,
       stock_gudang: Number(stock_gudang) || 0,
     },
   });

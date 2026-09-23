@@ -13,6 +13,10 @@ interface InventoryItem {
   warna: string;
   desain: string;
   model: string;
+  kode_wilayah: string;
+  kode_jenis: string;
+  kode_design: string;
+  kode_barang: string;
   stock_gudang: number;
 }
 
@@ -26,6 +30,9 @@ const EMPTY_FORM = {
   warna: "",
   desain: "Depan",
   model: "Lengan Pendek",
+  kode_wilayah: "",
+  kode_jenis: "",
+  kode_design: "",
   stock_gudang: "",
 };
 
@@ -48,22 +55,25 @@ export default function AdminGudangPage() {
     fetchItems();
   }, []);
 
-  const handleEditClick = (item: InventoryItem) => {
-    setEditingId(item.id);
-    setForm({
-      name: item.name,
-      category: item.category,
-      price: String(item.price),
-      pattern: item.pattern,
-      image: item.image,
-      description: item.description,
-      warna: item.warna,
-      desain: item.desain,
-      model: item.model,
-      stock_gudang: String(item.stock_gudang),
-    });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+ const handleEditClick = (item: InventoryItem) => {
+  setEditingId(item.id);
+  setForm({
+    name: item.name,
+    category: item.category,
+    price: String(item.price),
+    pattern: item.pattern,
+    image: item.image,
+    description: item.description,
+    warna: item.warna,
+    desain: item.desain,
+    model: item.model,
+    kode_wilayah: item.kode_wilayah,
+    kode_jenis: item.kode_jenis,
+    kode_design: item.kode_design,
+    stock_gudang: String(item.stock_gudang),
+  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
 
   const handleCancelEdit = () => {
     setEditingId(null);
@@ -141,6 +151,9 @@ export default function AdminGudangPage() {
         <input required type="number" placeholder="Harga" value={form.price}
           onChange={(e) => setForm({ ...form, price: e.target.value })}
           className="border border-black/10 px-3 py-2 text-sm" />
+          <input required type="number" placeholder="Stok Awal" value={form.stock_gudang}
+          onChange={(e) => setForm({ ...form, stock_gudang: e.target.value })}
+          className="border border-black/10 px-3 py-2 text-sm" />
 
         <input required placeholder="Pattern (misal: Parang)" value={form.pattern}
           onChange={(e) => setForm({ ...form, pattern: e.target.value })}
@@ -179,9 +192,17 @@ export default function AdminGudangPage() {
           </select>
         </div>
 
-        <input required type="number" placeholder="Stok Gudang" value={form.stock_gudang}
-          onChange={(e) => setForm({ ...form, stock_gudang: e.target.value })}
-          className="border border-black/10 px-3 py-2 text-sm" />
+       <input required placeholder="Kode Wilayah (misal: BDG, JBR, BGR)" value={form.kode_wilayah}
+  onChange={(e) => setForm({ ...form, kode_wilayah: e.target.value.toUpperCase() })}
+  className="border border-black/10 px-3 py-2 text-sm" />
+
+<input required placeholder="Kode Jenis Barang (misal: KAOS, STIKER, TUMBLER)" value={form.kode_jenis}
+  onChange={(e) => setForm({ ...form, kode_jenis: e.target.value.toUpperCase() })}
+  className="border border-black/10 px-3 py-2 text-sm" />
+
+<input required placeholder="Kode Design (misal: 001, 002, 221)" value={form.kode_design}
+  onChange={(e) => setForm({ ...form, kode_design: e.target.value })}
+  className="border border-black/10 px-3 py-2 text-sm" />
 
         <div className="flex gap-2">
           <button type="submit" disabled={submitting}
@@ -212,6 +233,12 @@ export default function AdminGudangPage() {
                     <p className="font-medium">{item.name}</p>
                     <p className="text-xs text-[#77736d]">
                       {item.category} · {item.warna} · {item.desain} · {item.model} · Rp {item.price.toLocaleString("id-ID")}
+                    </p>
+                    <p className="text-xs text-[#77736d]">
+                      {item.kode_wilayah} · {item.kode_jenis}
+                    </p>
+                    <p className="text-xs text-[#77736d]">
+                        {item.kode_barang}
                     </p>
                     <p className="text-xs font-semibold text-[#8b4a2f]">Stok: {item.stock_gudang}</p>
                   </div>

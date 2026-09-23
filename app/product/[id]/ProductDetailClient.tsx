@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, ShoppingBag, Lock, ArrowLeft } from "lucide-react";
+import { Heart, ShoppingBag, Lock, ArrowLeft, RotateCw } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Product } from "@/app/types/product";
@@ -9,12 +9,15 @@ import { useApp } from "@/app/context/AppContext";
 export default function ProductDetailClient({ product }: { product: Product }) {
   const { addToCart, user } = useApp();
   const [liked, setLiked] = useState(false);
+  const [activeView, setActiveView] = useState<"foto" | "360">("foto");
 
   const formattedPrice = new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
     maximumFractionDigits: 0,
   }).format(product.price);
+
+  const has360 = Boolean(product.video360);
 
   return (
     <div className="mx-auto max-w-[1200px] px-5 py-14 md:px-8 lg:px-10">
@@ -27,18 +30,60 @@ export default function ProductDetailClient({ product }: { product: Product }) {
       </Link>
 
       <div className="grid gap-10 md:grid-cols-2 md:gap-16">
-        <div className="relative aspect-[3/4] overflow-hidden bg-[#ebe7df]">
-          <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
-          <span className="absolute left-4 top-4 bg-white/90 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#171717] backdrop-blur-sm">
-            {product.pattern}
-          </span>
-          <button
-            onClick={() => setLiked((prev) => !prev)}
-            aria-label="Wishlist"
-            className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm transition hover:bg-white"
-          >
-            <Heart size={16} strokeWidth={1.4} className={liked ? "fill-[#8b4a2f] text-[#8b4a2f]" : "text-[#171717]"} />
-          </button>
+        <div>
+          <div className="relative aspect-[3/4] overflow-hidden bg-[#ebe7df]">
+            {activeView === "foto" ? (
+              <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
+            ) : (
+              <video
+                src={product.video360 || undefined}
+                autoPlay
+                loop
+                muted
+                playsInline
+                controls
+                className="h-full w-full object-cover"
+              />
+            )}
+
+            <span className="absolute left-4 top-4 bg-white/90 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-[#171717] backdrop-blur-sm">
+              {product.pattern}
+            </span>
+
+            <button
+              onClick={() => setLiked((prev) => !prev)}
+              aria-label="Wishlist"
+              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm transition hover:bg-white"
+            >
+              <Heart size={16} strokeWidth={1.4} className={liked ? "fill-[#8b4a2f] text-[#8b4a2f]" : "text-[#171717]"} />
+            </button>
+          </div>
+
+          {has360 && (
+            <div className="mt-3 flex gap-2">
+              <button
+                onClick={() => setActiveView("foto")}
+                className={`flex items-center gap-1.5 border px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] transition ${
+                  activeView === "foto"
+                    ? "border-[#171717] bg-[#171717] text-white"
+                    : "border-black/10 text-[#77736d] hover:border-black"
+                }`}
+              >
+                Foto
+              </button>
+              <button
+                onClick={() => setActiveView("360")}
+                className={`flex items-center gap-1.5 border px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] transition ${
+                  activeView === "360"
+                    ? "border-[#171717] bg-[#171717] text-white"
+                    : "border-black/10 text-[#77736d] hover:border-black"
+                }`}
+              >
+                <RotateCw size={12} strokeWidth={1.8} />
+                Lihat 360°
+              </button>
+            </div>
+          )}
         </div>
 
         <div>

@@ -67,15 +67,17 @@ export default function Catalog({
       gsap.fromTo(
         ".product-card-item",
         {
-          y: 25,
+          rotateY: -90,
           opacity: 0,
+          transformPerspective: 800,
+          transformOrigin: "left center",
         },
         {
-          y: 0,
+          rotateY: 0,
           opacity: 1,
-          duration: 0.55,
-          stagger: 0.06,
-          ease: "power2.out",
+          duration: 0.7,
+          stagger: 0.08,
+          ease: "power3.out",
         }
       );
     },
@@ -144,9 +146,16 @@ export default function Catalog({
       </div>
 
       {/* PRODUCTS */}
-      <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 md:gap-x-6 lg:grid-cols-4 lg:gap-x-7 lg:gap-y-16">
+      <div
+        className="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 md:gap-x-6 lg:grid-cols-4 lg:gap-x-7 lg:gap-y-16"
+        style={{ perspective: "1500px" }}
+      >
         {currentProducts.map((product) => (
-          <div key={product.id} className="product-card-item">
+          <div
+            key={product.id}
+            className="product-card-item"
+            style={{ transformStyle: "preserve-3d" }}
+          >
             <ProductCard
               product={product}
               onAddToCart={onAddToCart}

@@ -5,6 +5,7 @@ export interface Product {
   price: number;
   pattern: string;
   image: string;
+  video360?: string | null;
   description: string;
 }
 

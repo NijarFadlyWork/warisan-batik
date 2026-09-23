@@ -23,9 +23,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Akses ditolak" }, { status: 403 });
   }
 
-  const { inventoryId, price, description } = await req.json();
+  const { inventoryId, price, description, image, video360 } = await req.json();
 
-  if (!inventoryId || !price || !description) {
+  if (!inventoryId || !price || !description || !image) {
     return NextResponse.json({ message: "Semua kolom wajib diisi" }, { status: 400 });
   }
 
@@ -40,7 +40,8 @@ export async function POST(req: Request) {
       name: inventoryItem.name,
       category: inventoryItem.category,
       pattern: inventoryItem.pattern,
-      image: inventoryItem.image,
+      image,
+      video360: video360 || null,
       price: Number(price),
       description,
       inventoryId: inventoryItem.id,

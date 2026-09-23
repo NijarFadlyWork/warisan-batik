@@ -19,7 +19,7 @@ export async function PUT(
   }
 
   const { id } = await params;
-  const { name, category, price, pattern, image, description } = await req.json();
+  const { name, category, price, pattern, image, video360, description } = await req.json();
 
   if (!name || !category || !price || !pattern || !image || !description) {
     return NextResponse.json({ message: "Semua kolom wajib diisi" }, { status: 400 });
@@ -27,7 +27,15 @@ export async function PUT(
 
   const product = await prisma.product.update({
     where: { id },
-    data: { name, category, price: Number(price), pattern, image, description },
+    data: {
+      name,
+      category,
+      price: Number(price),
+      pattern,
+      image,
+      video360: video360 || null,
+      description,
+    },
   });
 
   return NextResponse.json({ status: "success", product });

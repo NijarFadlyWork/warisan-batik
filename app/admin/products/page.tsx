@@ -9,6 +9,7 @@ interface AdminProduct {
   price: number;
   pattern: string;
   image: string;
+  video360: string | null;
   description: string;
   stock_product: number;
   inventoryId: string | null;
@@ -31,9 +32,11 @@ export default function AdminProductsPage() {
   const [selectedInventoryId, setSelectedInventoryId] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
+  const [video360, setVideo360] = useState("");
 
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({ price: "", description: "" });
+  const [editForm, setEditForm] = useState({ price: "", description: "", image: "", video360: "" });
 
   const [stockInputs, setStockInputs] = useState<Record<string, string>>({});
   const [stockError, setStockError] = useState<Record<string, string>>({});
@@ -58,11 +61,23 @@ export default function AdminProductsPage() {
     setSubmitting(true);
     setErrorMsg("");
 
+    if (!image) {
+      setErrorMsg("Foto produk harus diisi");
+      setSubmitting(false);
+      return;
+    }
+
     try {
       const res = await fetch("/api/admin/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ inventoryId: selectedInventoryId, price, description }),
+        body: JSON.stringify({
+          inventoryId: selectedInventoryId,
+          price,
+          description,
+          image,
+          video360: video360 || null,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Gagal menambahkan produk");
@@ -70,6 +85,8 @@ export default function AdminProductsPage() {
       setSelectedInventoryId("");
       setPrice("");
       setDescription("");
+      setImage("");
+      setVideo360("");
       fetchData();
     } catch (err) {
       if (err instanceof Error) setErrorMsg(err.message);
@@ -80,7 +97,12 @@ export default function AdminProductsPage() {
 
   const handleEditClick = (product: AdminProduct) => {
     setEditingId(product.id);
-    setEditForm({ price: String(product.price), description: product.description });
+    setEditForm({
+      price: String(product.price),
+      description: product.description,
+      image: product.image,
+      video360: product.video360 || "",
+    });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -89,6 +111,12 @@ export default function AdminProductsPage() {
     if (!editingId) return;
     setSubmitting(true);
     setErrorMsg("");
+
+    if (!editForm.image) {
+      setErrorMsg("Foto produk harus diisi");
+      setSubmitting(false);
+      return;
+    }
 
     try {
       const currentProduct = products.find((p) => p.id === editingId);
@@ -99,7 +127,8 @@ export default function AdminProductsPage() {
           name: currentProduct?.name,
           category: currentProduct?.category,
           pattern: currentProduct?.pattern,
-          image: currentProduct?.image,
+          image: editForm.image,
+          video360: editForm.video360 || null,
           price: editForm.price,
           description: editForm.description,
         }),
@@ -155,6 +184,22 @@ export default function AdminProductsPage() {
           {errorMsg && <p className="text-xs text-red-600">{errorMsg}</p>}
 
           <div>
+            <label className="mb-1 block text-xs text-[#77736d]">URL Foto</label>
+            <input required type="text" value={editForm.image}
+              onChange={(e) => setEditForm({ ...editForm, image: e.target.value })}
+              className="w-full border border-black/10 px-3 py-2 text-sm" />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs text-[#77736d]">
+              URL Video 360° (.mp4) <span className="text-[#a8a49c]">— opsional</span>
+            </label>
+            <input type="text" placeholder="https://.../video360.mp4" value={editForm.video360}
+              onChange={(e) => setEditForm({ ...editForm, video360: e.target.value })}
+              className="w-full border border-black/10 px-3 py-2 text-sm" />
+          </div>
+
+          <div>
             <label className="mb-1 block text-xs text-[#77736d]">Harga</label>
             <input required type="number" value={editForm.price}
               onChange={(e) => setEditForm({ ...editForm, price: e.target.value })}
@@ -199,6 +244,22 @@ export default function AdminProductsPage() {
           </div>
 
           <div>
+            <label className="mb-1 block text-xs text-[#77736d]">URL Foto</label>
+            <input required type="text" placeholder="https://..." value={image}
+              onChange={(e) => setImage(e.target.value)}
+              className="w-full border border-black/10 px-3 py-2 text-sm" />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs text-[#77736d]">
+              URL Video 360° (.mp4) <span className="text-[#a8a49c]">— opsional</span>
+            </label>
+            <input type="text" placeholder="https://.../video360.mp4" value={video360}
+              onChange={(e) => setVideo360(e.target.value)}
+              className="w-full border border-black/10 px-3 py-2 text-sm" />
+          </div>
+
+          <div>
             <label className="mb-1 block text-xs text-[#77736d]">Harga Jual</label>
             <input required type="number" placeholder="Harga" value={price}
               onChange={(e) => setPrice(e.target.value)}
@@ -231,7 +292,14 @@ export default function AdminProductsPage() {
                   <div className="flex items-center gap-3">
                     <img src={p.image} alt={p.name} className="h-12 w-12 object-cover" />
                     <div>
-                      <p className="font-medium">{p.name}</p>
+                      <p className="font-medium">
+                        {p.name}{" "}
+                        {p.video360 && (
+                          <span className="text-[9px] font-semibold uppercase tracking-wide text-[#8b4a2f]">
+                            360°
+                          </span>
+                        )}
+                      </p>
                       <p className="text-xs text-[#77736d]">
                         {p.category} · Rp {p.price.toLocaleString("id-ID")} · Stok Etalase: {p.stock_product}
                       </p>
